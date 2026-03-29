@@ -1,55 +1,89 @@
-# Musher Dev Container Template
+# Musher Demo
 
-Canonical dev container template for the musher-dev organization. Batteries-included configuration with AI CLIs, multiple language runtimes, Docker-in-Docker, Task runner, and consistent VS Code settings. Comment out what you don't need.
+A showcase repository for the [Musher](https://hub.musher.dev) platform. It contains a ready-to-publish bundle with practical skills and agents, plus Python and TypeScript SDK examples that consume those same assets — demonstrating the full end-to-end value proposition.
 
-## What You Get
+## What's Inside
 
-- Ubuntu base with zsh/oh-my-zsh
-- Node, Python, Go runtimes
-- Docker-in-Docker
-- Git + GitHub CLI
-- Claude CLI + Codex CLI + Task runner
-- GitLens, YAML, TOML, Copilot, Go, Python, Ruff, ESLint, Docker extensions
-- Format on save, rulers, trailing whitespace trimming
-
-## Usage
-
-1. Click **Use this template** → **Create a new repository** on GitHub
-2. Clone your new repo and open in VS Code
-3. **Command Palette** → **Dev Containers: Reopen in Container**
-4. *(Optional)* Copy `.devcontainer/.env.example` → `.devcontainer/.env` and set `COMPOSE_PROFILES` for optional services
-
-## Customize
-
-- Comment out unneeded features/extensions in `devcontainer.json`
-- Add project setup to `scripts/post-create.sh` (runs after `base_setup`)
-- Enable optional services via `COMPOSE_PROFILES` in `.devcontainer/.env` (redis, minio, registry, azimutt, observability)
-- Full reference → [CONFIGURATION.md](CONFIGURATION.md)
-
-## Included CI
-
-This template includes `.github/workflows/validate.yaml` which runs ShellCheck, Compose config validation, and a devcontainer build check. Keep or remove per your project's needs.
-
-## Troubleshooting
-
-### CRLF / WSL line ending issues
-
-The `postCreateCommand` automatically strips `\r` from all scripts before running them. If you add new scripts, ensure they're under `.devcontainer/scripts/` to be included.
-
-### Stale containers
-
-If settings aren't applying after changes, rebuild without cache:
-
-**Command Palette** → **Dev Containers: Rebuild Container Without Cache**
-
-### Volume permission errors
-
-Named volumes may initialize with root ownership. The `ensure_writable_dir` function in `common.sh` and the `base_setup_config_dirs` step handle this for base volumes. For custom volumes, call `ensure_writable_dir` in your `post-create.sh`:
-
-```bash
-ensure_writable_dir /home/vscode/.my-tool
+```
+demo/
+├── bundle/                   Musher bundle (skills + agents)
+│   ├── musher.yaml           Bundle manifest
+│   ├── skills/
+│   │   ├── summarize-changes/     Summarize git history and diffs
+│   │   └── write-commit-message/  Generate Conventional Commits messages
+│   └── agents/
+│       └── code-reviewer.md  Specialist read-only code-review agent
+└── examples/                 SDK usage examples
+    ├── python/               Python SDK (pull, install skills, use with Claude)
+    └── typescript/           TypeScript SDK (pull, use with Claude)
 ```
 
-### Tool installation failures
+## The Bundle
 
-Base setup uses `retry` with 3 attempts and 5-second delays for network operations. If a tool consistently fails to install, check network connectivity and try rebuilding the container.
+The `musher-dev/demo-starter` bundle ships two skills and one agent that solve everyday developer workflow problems.
+
+| Asset | Type | What it does |
+|-------|------|--------------|
+| `summarize-changes` | Skill | Summarize git history, staged diffs, or PR changes into themed summaries |
+| `write-commit-message` | Skill | Generate Conventional Commits–compliant messages from staged diffs |
+| `code-reviewer` | Agent | Read-only specialist that reviews code with severity-graded findings |
+
+### Use with a CLI harness
+
+Install via the [Mush CLI](https://github.com/musher-dev/mush) into any project:
+
+```bash
+# Install and add to your project
+mush bundle install musher-dev/demo-starter
+
+# Or run ephemerally
+mush bundle load musher-dev/demo-starter
+```
+
+Then invoke from Claude Code, Codex, or any supported harness:
+
+```
+Summarize the changes since the last release
+Write a commit message for my staged changes
+Use the code-reviewer agent to review the auth module
+```
+
+## SDK Examples
+
+The `examples/` directory shows how to consume the same bundle assets programmatically.
+
+### Python
+
+```bash
+cd examples/python
+pip install -r requirements.txt
+export MUSHER_API_KEY="mush_..."
+python 01_pull_bundle.py        # Inspect bundle contents
+python 02_install_skills.py     # Install skills into a Claude Code project
+python 03_use_with_claude.py    # Use skills as system prompts with Anthropic API
+```
+
+### TypeScript
+
+```bash
+cd examples/typescript
+npm install
+export MUSHER_API_KEY="mush_..."
+npm run pull-bundle             # Inspect bundle contents
+npm run use-with-claude         # Use skills as system prompts with Anthropic SDK
+```
+
+## Related Repositories
+
+| Repo | Description |
+|------|-------------|
+| [musher-dev/mush](https://github.com/musher-dev/mush) | Mush CLI — install and run bundles locally |
+| [musher-dev/musher-cli](https://github.com/musher-dev/musher-cli) | CLI for publishing bundles to the registry |
+| [musher-dev/python-sdk](https://github.com/musher-dev/python-sdk) | Python SDK for the Musher platform |
+| [musher-dev/typescript-sdk](https://github.com/musher-dev/typescript-sdk) | TypeScript SDK for the Musher platform |
+| [musher-dev/specs](https://github.com/musher-dev/specs) | Bundle definition schemas and specifications |
+| [musher-dev/bundles](https://github.com/musher-dev/bundles) | Community bundle collection |
+
+## Dev Container
+
+This repo includes a batteries-included dev container with Node, Python, Go, Claude CLI, Codex CLI, and all the tooling needed to work on the bundle and examples. See [CONFIGURATION.md](CONFIGURATION.md) for full details.

@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://schemas.musher.dev/bundle-definition/v1alpha1/schema.json
+namespace: musher-dev
+slug: demo-starter
+version: 1.0.0
+name: Demo Starter
+description: A demonstration bundle showcasing the Musher platform with practical skills and agents for everyday development workflows.
+visibility: public
+readme: README.md
+license: MIT
+repository: https://github.com/musher-dev/demo
+keywords:
+  - demo
+  - git
+  - code-review
+  - commit
+  - changelog
+assets:
+  - id: summarize-changes
+    src: skills/summarize-changes/SKILL.md
+    kind: skill
+
+  - id: write-commit-message
+    src: skills/write-commit-message/SKILL.md
+    kind: skill
+
+  - id: code-reviewer
+    src: agents/code-reviewer.md
+    kind: agent
