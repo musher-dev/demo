@@ -1,8 +1,11 @@
 /**
- * Pull the demo-starter bundle and inspect its contents.
+ * Pull the repo-documentation-governance bundle and inspect its contents.
  *
  * Prerequisites:
  *   export MUSHER_API_KEY="mush_..."
+ *
+ * To use your own published bundle, set:
+ *   export MUSHER_BUNDLE_REF="your-namespace/repo-documentation-governance:1.0.0"
  *
  * Run:
  *   npx tsx 01-pull-bundle.ts
@@ -10,12 +13,15 @@
 
 import { pull } from "@musher-dev/musher-sdk";
 
-const bundle = await pull("musher-examples/demo-starter:1.0.0");
+const bundleRef =
+	process.env.MUSHER_BUNDLE_REF ?? "musher-examples/repo-documentation-governance:1.0.0";
+
+const bundle = await pull(bundleRef);
 
 console.log(`Bundle: ${bundle.ref.toBaseRef()} v${bundle.version}`);
 console.log();
 
-// List all files in the bundle
+// List all files — notice multi-file skills ship more than just SKILL.md
 const files = bundle.files();
 console.log(`Files (${files.length}):`);
 for (const file of files) {
@@ -40,7 +46,7 @@ for (const agentSpec of agentSpecs) {
 console.log();
 
 // Access a specific skill by name
-const skill = bundle.skill("summarizing-changes");
+const skill = bundle.skill("auditing-repo-documentation");
 if (skill) {
 	const preview = skill.definition()!.text().slice(0, 300);
 	console.log(`Skill content preview (${skill.name}):`);

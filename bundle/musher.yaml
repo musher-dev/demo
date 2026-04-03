@@ -1,28 +1,35 @@
-# yaml-language-server: $schema=https://schemas.musher.dev/bundle-definition/v1alpha1/schema.json
 namespace: musher-examples
-slug: demo-starter
+slug: repo-documentation-governance
 version: 1.0.0
-name: Demo Starter
-description: A demonstration bundle showcasing the Musher platform with practical skills and agents for everyday development workflows.
+name: Repo Documentation Governance
+description: A Musher demo bundle for repository documentation auditing and scaffolding with Claude Agent SDK.
 visibility: public
 readme: README.md
 license: MIT
 repository: https://github.com/musher-dev/demo
 keywords:
   - demo
-  - git
-  - code-review
-  - commit
-  - changelog
+  - documentation
+  - governance
+  - github
+  - claude-agent-sdk
 assets:
-  - id: summarizing-changes
-    src: skills/summarizing-changes/SKILL.md
+  - id: auditing-repo-documentation
+    src: skills/auditing-repo-documentation/SKILL.md
     kind: skill
 
-  - id: writing-commit-messages
-    src: skills/writing-commit-messages/SKILL.md
+  - id: scaffolding-repo-documentation
+    src: skills/scaffolding-repo-documentation/SKILL.md
     kind: skill
 
-  - id: code-reviewer
-    src: agents/code-reviewer.md
+  - id: writing-readme
+    src: skills/writing-readme/SKILL.md
+    kind: skill
+
+  - id: writing-security-policy
+    src: skills/writing-security-policy/SKILL.md
+    kind: skill
+
+  - id: repo-docs-auditor
+    src: agents/repo-docs-auditor.md
     kind: agent
