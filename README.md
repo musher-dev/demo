@@ -1,94 +1,89 @@
 # Musher Demo
 
-A showcase repository for the [Musher](https://hub.musher.dev) platform. It contains a ready-to-publish bundle with practical skills and agents, plus Python and TypeScript SDK examples that consume those same assets — demonstrating the full end-to-end value proposition.
+A showcase repository for the [Musher](https://hub.musher.dev) platform. It contains a ready-to-publish bundle with multi-file skills and an agent spec, plus SDK examples that demonstrate the full lifecycle: **author → publish → install → run with Claude Agent SDK**.
 
-## Start Here
+## Why This Example Exists
 
-Install the [Musher CLI](https://github.com/musher-dev/musher-cli):
+Instead of hard-coding long system prompts or manually copying `.claude/skills/` folders between projects, we:
 
-```bash
-curl -fsSL https://get.musher.dev | sh
-```
+1. **Author** a versioned Musher bundle with multi-file skills (rubrics, templates, checklists)
+2. **Publish** it to the Musher Hub (or pack it locally)
+3. **Install** the skills into the filesystem layout the Claude Agent SDK expects
+4. **Run** the Agent SDK — Claude discovers and invokes the skills autonomously, constrained by hooks, permissions, and structured output
+
+The demo uses a **repo documentation auditing** use case: the agent scans a fixture repository, scores its documentation health, and scaffolds missing files.
 
 ## What's Inside
 
 ```
 demo/
-├── bundle/                   Musher bundle (skills + agents)
-│   ├── musher.yaml           Bundle manifest
+├── bundle/                            Musher bundle source (skills + agents)
+│   ├── musher.yaml                    Bundle manifest
 │   ├── skills/
-│   │   ├── summarizing-changes/        Summarize git history and diffs
-│   │   └── writing-commit-messages/    Generate Conventional Commits messages
+│   │   ├── auditing-repo-documentation/     Score documentation health (SKILL.md + rubric)
+│   │   ├── scaffolding-repo-documentation/  Create missing docs (SKILL.md + checklist + reference)
+│   │   ├── writing-readme/                  Generate README (SKILL.md + template)
+│   │   └── writing-security-policy/         Generate SECURITY.md (SKILL.md + template)
 │   └── agents/
-│       └── code-reviewer.md  Specialist read-only code-review agent
-└── examples/                 SDK usage examples
-    ├── python/               Python SDK (pull, install skills, use with Claude)
-    └── typescript/           TypeScript SDK (pull, install skills, use with Claude)
+│       └── repo_docs_auditor.md       Orchestrator agent composing all skills
+└── examples/
+    ├── python/
+    │   ├── repo_docs_audit.py         Pull, install, and run Agent SDK in one script
+    │   └── fixtures/under_documented_repo/  Intentionally under-documented fixture project
+    └── typescript/                    TypeScript SDK (pull + install; Agent SDK demo pending)
 ```
 
 ## The Bundle
 
-The `musher-examples/demo-starter` bundle ships two skills and one agent that solve everyday developer workflow problems.
+The `repo-documentation-governance` bundle ships four multi-file skills and one agent for documentation governance.
 
-| Asset | Type | What it does |
-|-------|------|--------------|
-| `summarizing-changes` | Skill | Summarize git history, staged diffs, or PR changes into themed summaries |
-| `writing-commit-messages` | Skill | Generate Conventional Commits–compliant messages from staged diffs |
-| `code-reviewer` | Agent | Read-only specialist that reviews code with severity-graded findings |
+| Asset | Type | Files | What it does |
+|-------|------|-------|--------------|
+| `auditing-repo-documentation` | Skill | SKILL.md, scoring-rubric.md | Score docs health with weighted rubric |
+| `scaffolding-repo-documentation` | Skill | SKILL.md, docs-checklist.md, github-community-profile.md | Create missing docs based on audit |
+| `writing-readme` | Skill | SKILL.md, templates/README.template.md | Generate or improve README.md |
+| `writing-security-policy` | Skill | SKILL.md, templates/SECURITY.template.md | Generate SECURITY.md with disclosure policy |
+| `repo-docs-auditor` | Agent | repo_docs_auditor.md | Orchestrator that audits, scaffolds, and reports |
 
-### Use with a CLI harness
+## Quick Start
 
-Install via the [Musher CLI](https://github.com/musher-dev/musher-cli) into any project:
+### 1. Publish or pack the bundle
 
 ```bash
-# Install and add to your project
-musher bundle pull musher-examples/demo-starter
+# Install the Musher CLI
+curl -fsSL https://get.musher.dev | sh
 
-# Or run ephemerally
-musher bundle load musher-examples/demo-starter
+cd bundle
+
+# Option A: Publish to your Musher Hub account
+musher bundle publish
+
+# Option B: Pack locally (no account needed)
+musher bundle pack
 ```
 
-Then invoke from Claude Code, Codex, or any supported harness:
-
-```
-Summarize the changes since the last release
-Write a commit message for my staged changes
-Use the code-reviewer agent to review the auth module
-```
-
-## SDK Examples
-
-The `examples/` directory shows how to consume the same bundle assets programmatically.
-
-Both SDKs need a `MUSHER_API_KEY` — sign up at [hub.musher.dev](https://hub.musher.dev) and generate one under **Settings > API Keys**. Examples that call the Anthropic API also need an `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/).
-
-> **Note — local source vs. published names:**
-> The `bundle/` directory contains the *source* files for this bundle. Asset names in the
-> source manifest (`musher.yaml`) may differ from names in the published bundle on
-> [hub.musher.dev](https://hub.musher.dev). The SDK examples reference the **published**
-> names (e.g. `summarizing-changes` rather than the source name `summarize-changes`).
-
-### Python
+### 2. Run the demo (Python)
 
 ```bash
 cd examples/python
 pip install -r requirements.txt
 export MUSHER_API_KEY="mush_..."
-python 01_pull_bundle.py        # Inspect bundle contents
-python 02_install_skills.py     # Install skills into a Claude Code project
-python 03_use_with_claude.py    # Use skills as system prompts with Anthropic API
+export ANTHROPIC_API_KEY="sk-ant-..."
+
+# Point at your published bundle (or use the default)
+export MUSHER_BUNDLE_REF="your-namespace/repo-documentation-governance:1.0.0"
+
+python repo_docs_audit.py
 ```
 
-### TypeScript
+The script pulls the bundle, installs skills, and runs the Claude Agent SDK in one go.
 
-```bash
-cd examples/typescript
-npm install
-export MUSHER_API_KEY="mush_..."
-npm run pull-bundle             # Inspect bundle contents
-npm run install-skills          # Install skills into a Claude Code project
-npm run use-with-claude         # Use skills as system prompts with Anthropic SDK
-```
+### What to Look For
+
+- Skills are loaded from `.claude/skills/` — including companion files (rubrics, templates)
+- Claude invokes them autonomously through the `Skill` tool
+- Hooks constrain where the agent can write (fixture repo only)
+- The final result is JSON you could feed into CI, a dashboard, or another service
 
 ## Related Repositories
 
@@ -102,4 +97,4 @@ npm run use-with-claude         # Use skills as system prompts with Anthropic SD
 
 ## Dev Container
 
-This repo includes a batteries-included dev container with Node, Python, Go, Claude CLI, Codex CLI, and all the tooling needed to work on the bundle and examples. See [CONFIGURATION.md](CONFIGURATION.md) for full details.
+This repo includes a dev container with Python, Node.js, and Claude CLI pre-installed. See [CONFIGURATION.md](CONFIGURATION.md) for details.

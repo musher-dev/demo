@@ -6,10 +6,9 @@
   "scripts": {
     "pull-bundle": "tsx 01-pull-bundle.ts",
     "install-skills": "tsx 02-install-skills.ts",
-    "use-with-claude": "tsx 03-use-with-claude.ts"
+    "agent-sdk-demo": "tsx 03-use-with-claude.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.82.0",
     "@musher-dev/musher-sdk": "^0.4.0"
   },
   "devDependencies": {

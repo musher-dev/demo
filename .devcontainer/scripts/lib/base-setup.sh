@@ -33,8 +33,7 @@ source "${_LIB_DIR}/common.sh"
 base_setup_config_dirs() {
   setup_config_dirs \
     "gh config:${_HOME}/.config/gh" \
-    "claude:${_HOME}/.claude" \
-    "codex:${_HOME}/.codex"
+    "claude:${_HOME}/.claude"
 }
 
 # --- Cache directories ---
@@ -52,12 +51,7 @@ base_setup_cache_dirs() {
     "uv cache:${_HOME}/.cache/uv" \
     "ruff cache:${_HOME}/.cache/ruff" \
     "pip cache:${_HOME}/.cache/pip" \
-    "mypy cache:${_HOME}/.cache/mypy" \
-    "npm cache:${_HOME}/.cache/npm" \
-    "deno cache:${_HOME}/.cache/deno" \
-    "go mod cache:${_HOME}/.cache/go/mod" \
-    "go build cache:${_HOME}/.cache/go/build" \
-    "bun cache:${_HOME}/.cache/bun"
+    "npm cache:${_HOME}/.cache/npm"
 }
 
 # --- NVM ---
@@ -82,22 +76,6 @@ base_install_claude() {
   fi
   log "Installing Claude Code (native installer)..."
   retry 3 5 bash -c 'curl -fsSL https://claude.ai/install.sh | bash'
-}
-
-# --- Codex CLI ---
-
-# Installs the Codex CLI if not already present.
-#
-# Outputs:
-#   Writes progress to stderr via log()
-# Returns:
-#   0 on success, non-zero on failure
-base_install_codex() {
-  if has_cmd codex; then
-    log "Codex CLI already installed, skipping"
-    return 0
-  fi
-  install_npm_cli "@openai/codex"
 }
 
 # --- Lefthook ---
@@ -125,7 +103,7 @@ base_install_lefthook() {
 # Returns:
 #   0 if all tools found, 1 if any are missing
 base_verify_tools() {
-  verify_tools gh claude task codex lefthook
+  verify_tools gh claude lefthook
 }
 
 # --- Orchestrator ---
@@ -140,7 +118,6 @@ base_setup() {
   base_setup_cache_dirs
   base_fix_nvm_permissions
   base_install_claude
-  base_install_codex
   base_install_lefthook
   base_verify_tools
   log "Base setup complete"

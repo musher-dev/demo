@@ -1,63 +1,59 @@
-# Demo Starter
+# Repo Documentation Governance
 
-A demonstration bundle for the [Musher](https://hub.musher.dev) platform. Ships three practical assets — two skills and a specialist agent — that work across all supported CLI harnesses (Claude Code, Codex, OpenCode, Copilot, Gemini CLI).
+A [Musher](https://hub.musher.dev) bundle that audits and scaffolds repository documentation. Ships four multi-file skills and a specialist agent — designed to demonstrate how Musher distributes versioned agent behavior for the Claude Agent SDK.
+
+- **Domain:** repo-documentation
+- **Purpose:** governance
+- **Risk Level:** low
+- **Technologies:** Claude Agent SDK
+- **Aliases:** repo-docs, documentation-audit
 
 ## Quick Start
 
-Install via the [Musher CLI](https://github.com/musher-dev/musher-cli):
+Publish to your own account or pack locally:
 
 ```sh
-musher bundle pull musher-examples/demo-starter
+cd bundle
+
+# Option A: Publish to Musher Hub
+musher bundle publish
+
+# Option B: Local pack (no account needed)
+musher bundle pack
 ```
 
-Then invoke from any compatible harness:
+Then install and use the skills:
 
 ```
-Summarize the changes in the last 5 commits
+Audit this repo's documentation health
 ```
 
 ```
-Write a conventional commit message for my staged changes
-```
-
-Or delegate to the specialist agent:
-
-```
-Use the code-reviewer agent to review my latest changes
+Scaffold missing community-health files
 ```
 
 ## What's Inside
 
 ### Skills
 
-| Skill | Description |
-|-------|-------------|
-| `summarizing-changes` | Summarize git history, staged diffs, or PR changes into clear, human-readable summaries |
-| `writing-commit-messages` | Generate Conventional Commits–compliant messages from staged diffs or a description of the change |
+| Skill | Files | Description |
+|-------|-------|-------------|
+| `auditing-repo-documentation` | SKILL.md, scoring-rubric.md | Score documentation health with weighted rubric |
+| `scaffolding-repo-documentation` | SKILL.md, docs-checklist.md, github-community-profile.md | Create missing docs based on audit results |
+| `writing-readme` | SKILL.md, templates/README.template.md | Generate or improve README.md |
+| `writing-security-policy` | SKILL.md, templates/SECURITY.template.md | Generate SECURITY.md with disclosure policy |
 
 ### Agents
 
 | Agent | Description |
 |-------|-------------|
-| `code-reviewer` | A specialist read-only agent that reviews code for quality, correctness, and best-practice adherence with structured feedback |
+| `repo_docs_auditor` | Orchestrator that audits, scaffolds, and reports in a single run |
 
-## Usage Examples
+### Tools
 
-**Summarize recent changes**
-```
-Summarize the changes since the last release
-```
+None
 
-**Write a commit message**
-```
-Write a commit message for my staged changes
-```
+## Why Multi-File Skills?
 
-**Delegate a thorough code review**
-```
-Use the code-reviewer agent to review the authentication module
-```
+Each skill ships companion files (rubrics, templates, checklists) alongside SKILL.md. This demonstrates Musher's distribution value: you are not just shipping a prompt, you are shipping **reusable expertise with supporting data** — versioned, pinned, and discoverable by the SDK.
 
----
-
-**Domain:** developer-workflows · **Technologies:** Harness-agnostic · **Aliases:** demo, starter, git-workflows

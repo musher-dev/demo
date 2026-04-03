@@ -9,3 +9,7 @@
 
 # Dependencies
 node_modules/
+
+# Python example outputs
+examples/python/out/
+examples/python/.claude/skills/
