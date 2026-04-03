@@ -5,7 +5,7 @@ from pathlib import Path
 import musher
 
 # Pull the demo-starter bundle
-bundle = musher.pull("musher-dev/demo-starter:1.0.0")
+bundle = musher.pull("musher-examples/demo-starter:1.0.0")
 
 # Target directory for Claude Code skills
 # Relative to your project root — Claude Code discovers skills from .claude/skills/
@@ -16,13 +16,13 @@ skills_dir = Path(".claude/skills")
 # target directory; it does NOT affect manually placed skills.
 bundle.install_claude_skills(
     skills_dir,
-    skills=["summarize-changes", "write-commit-message"],
+    skills=["summarizing-changes", "writing-commit-messages"],
     clean=True,
 )
 
 print(f"Installed skills to {skills_dir}/")
 for skill in bundle.skills():
-    installed_path = skills_dir / f"{skill.name}.md"
+    installed_path = skills_dir / skill.name / "SKILL.md"
     status = "✓" if installed_path.exists() else "✗"
     print(f"  {status} {skill.name}")
 

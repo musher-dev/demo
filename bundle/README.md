@@ -4,10 +4,10 @@ A demonstration bundle for the [Musher](https://hub.musher.dev) platform. Ships 
 
 ## Quick Start
 
-Install via the [Mush CLI](https://github.com/musher-dev/mush):
+Install via the [Musher CLI](https://github.com/musher-dev/musher-cli):
 
 ```sh
-mush bundle install musher-dev/demo-starter
+musher bundle pull musher-examples/demo-starter
 ```
 
 Then invoke from any compatible harness:
@@ -32,8 +32,8 @@ Use the code-reviewer agent to review my latest changes
 
 | Skill | Description |
 |-------|-------------|
-| `summarize-changes` | Summarize git history, staged diffs, or PR changes into clear, human-readable summaries |
-| `write-commit-message` | Generate Conventional Commits–compliant messages from staged diffs or a description of the change |
+| `summarizing-changes` | Summarize git history, staged diffs, or PR changes into clear, human-readable summaries |
+| `writing-commit-messages` | Generate Conventional Commits–compliant messages from staged diffs or a description of the change |
 
 ### Agents
 
