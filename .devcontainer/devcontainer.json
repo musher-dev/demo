@@ -52,7 +52,7 @@
     "ghcr.io/devcontainers-extra/features/go-task:1": {},
 
     // --- Linting ---
-    "ghcr.io/lukewiwa/features/shellcheck:0": { "version": "stable" },
+    "ghcr.io/lukewiwa/features/shellcheck:0": { "version": "stable" }
 
     // --- Optional: Infrastructure tooling (uncomment as needed) ---
     // "ghcr.io/devcontainers-extra/features/opentofu:1": {},
@@ -101,21 +101,31 @@
   },
 
   "waitFor": "postCreateCommand",
-  "postCreateCommand": {
-    "fix-crlf": "find .devcontainer/scripts -type f -name '*.sh' -exec sed -i 's/\\r$//' {} +",
-    "setup": ["bash", ".devcontainer/scripts/post-create.sh"]
-  },
+  "postCreateCommand": [
+    "bash",
+    "-lc",
+    "find .devcontainer/scripts -type f -name '*.sh' -exec sed -i 's/\\r$//' {} + && bash .devcontainer/scripts/post-create.sh"
+  ],
   "postStartCommand": ["bash", ".devcontainer/scripts/startup.sh"],
 
-  "forwardPorts": [15432, 15433, 15434, 15435, 15436, 15440, 15441, 15442, 15443, 15444, 15445, 15446, 15447, 15448, 15460],
+  "forwardPorts": [
+    15432, 15433, 15434, 15435, 15436, 15440, 15441, 15442, 15443, 15444, 15445,
+    15446, 15447, 15448, 15460
+  ],
   "portsAttributes": {
     "15432": { "label": "PostgreSQL", "onAutoForward": "silent" },
     "15433": { "label": "Redis", "onAutoForward": "silent" },
     "15434": { "label": "MinIO API", "onAutoForward": "silent" },
     "15435": { "label": "MinIO Console", "onAutoForward": "silent" },
     "15436": { "label": "OCI Registry", "onAutoForward": "silent" },
-    "15440": { "label": "MinIO API (Observability)", "onAutoForward": "silent" },
-    "15441": { "label": "MinIO Console (Observability)", "onAutoForward": "silent" },
+    "15440": {
+      "label": "MinIO API (Observability)",
+      "onAutoForward": "silent"
+    },
+    "15441": {
+      "label": "MinIO Console (Observability)",
+      "onAutoForward": "silent"
+    },
     "15442": { "label": "Tempo", "onAutoForward": "silent" },
     "15443": { "label": "Loki", "onAutoForward": "silent" },
     "15444": { "label": "VictoriaMetrics", "onAutoForward": "silent" },

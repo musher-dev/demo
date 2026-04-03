@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://schemas.musher.dev/bundle-definition/v1alpha1/schema.json
-namespace: musher-dev
+namespace: musher-examples
 slug: demo-starter
 version: 1.0.0
 name: Demo Starter
@@ -15,12 +15,12 @@ keywords:
   - commit
   - changelog
 assets:
-  - id: summarize-changes
-    src: skills/summarize-changes/SKILL.md
+  - id: summarizing-changes
+    src: skills/summarizing-changes/SKILL.md
     kind: skill
 
-  - id: write-commit-message
-    src: skills/write-commit-message/SKILL.md
+  - id: writing-commit-messages
+    src: skills/writing-commit-messages/SKILL.md
     kind: skill
 
   - id: code-reviewer

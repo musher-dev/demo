@@ -1,0 +1,2 @@
+# Keep shell scripts on LF to avoid devcontainer/bash startup issues
+*.sh text eol=lf

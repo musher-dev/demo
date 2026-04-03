@@ -6,7 +6,7 @@ This example shows how to:
 3. Run a code review using the code-reviewer agent spec
 
 Prerequisites:
-    pip install musher anthropic
+    pip install musher-sdk anthropic
     export MUSHER_API_KEY="mush_..."
     export ANTHROPIC_API_KEY="sk-ant-..."
 """
@@ -15,20 +15,19 @@ import anthropic
 import musher
 
 # Pull the demo-starter bundle
-bundle = musher.pull("musher-dev/demo-starter:1.0.0")
+bundle = musher.pull("musher-examples/demo-starter:1.0.0")
 
 # ── Example 1: Use a skill as a system prompt ────────────────────────────────
 
-skill = bundle.skill("write-commit-message")
-assert skill is not None, "Skill 'write-commit-message' not found in bundle"
+skill = bundle.skill("writing-commit-messages")
 
 client = anthropic.Anthropic()
 
 # The skill's SKILL.md content contains the full instructions for the model
-skill_instructions = skill.text()
+skill_instructions = skill.skill_md().text()
 
 response = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=512,
     system=skill_instructions,
     messages=[
@@ -49,10 +48,17 @@ print()
 
 # ── Example 2: Use the code-reviewer agent spec ───────────────────────────────
 
-agent = bundle.agent("code-reviewer")
-assert agent is not None, "Agent 'code-reviewer' not found in bundle"
+agent = bundle.agent_spec("code-reviewer")
 
-agent_spec = agent.text()
+# The agent spec is JSON — parse it to build a system prompt from its fields
+agent_config = agent.parse_json()
+system_prompt = (
+    f"You are a {agent_config['name']}. {agent_config['description']}\n\n"
+    "Analyze code for correctness, security vulnerabilities, and best practices. "
+    "For each finding, assign a severity (CRITICAL, MAJOR, MINOR, NIT) and explain "
+    "the issue with a suggested fix. End with an overall verdict: Approve, "
+    "Approve with suggestions, or Request changes."
+)
 
 sample_code = '''
 def get_user(user_id):
@@ -61,9 +67,9 @@ def get_user(user_id):
 '''
 
 response = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
-    system=agent_spec,
+    system=system_prompt,
     messages=[
         {
             "role": "user",

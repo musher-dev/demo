@@ -2,6 +2,14 @@
 
 A showcase repository for the [Musher](https://hub.musher.dev) platform. It contains a ready-to-publish bundle with practical skills and agents, plus Python and TypeScript SDK examples that consume those same assets — demonstrating the full end-to-end value proposition.
 
+## Start Here
+
+Install the [Musher CLI](https://github.com/musher-dev/musher-cli):
+
+```bash
+curl -fsSL https://get.musher.dev | sh
+```
+
 ## What's Inside
 
 ```
@@ -9,35 +17,35 @@ demo/
 ├── bundle/                   Musher bundle (skills + agents)
 │   ├── musher.yaml           Bundle manifest
 │   ├── skills/
-│   │   ├── summarize-changes/     Summarize git history and diffs
-│   │   └── write-commit-message/  Generate Conventional Commits messages
+│   │   ├── summarizing-changes/        Summarize git history and diffs
+│   │   └── writing-commit-messages/    Generate Conventional Commits messages
 │   └── agents/
 │       └── code-reviewer.md  Specialist read-only code-review agent
 └── examples/                 SDK usage examples
     ├── python/               Python SDK (pull, install skills, use with Claude)
-    └── typescript/           TypeScript SDK (pull, use with Claude)
+    └── typescript/           TypeScript SDK (pull, install skills, use with Claude)
 ```
 
 ## The Bundle
 
-The `musher-dev/demo-starter` bundle ships two skills and one agent that solve everyday developer workflow problems.
+The `musher-examples/demo-starter` bundle ships two skills and one agent that solve everyday developer workflow problems.
 
 | Asset | Type | What it does |
 |-------|------|--------------|
-| `summarize-changes` | Skill | Summarize git history, staged diffs, or PR changes into themed summaries |
-| `write-commit-message` | Skill | Generate Conventional Commits–compliant messages from staged diffs |
+| `summarizing-changes` | Skill | Summarize git history, staged diffs, or PR changes into themed summaries |
+| `writing-commit-messages` | Skill | Generate Conventional Commits–compliant messages from staged diffs |
 | `code-reviewer` | Agent | Read-only specialist that reviews code with severity-graded findings |
 
 ### Use with a CLI harness
 
-Install via the [Mush CLI](https://github.com/musher-dev/mush) into any project:
+Install via the [Musher CLI](https://github.com/musher-dev/musher-cli) into any project:
 
 ```bash
 # Install and add to your project
-mush bundle install musher-dev/demo-starter
+musher bundle pull musher-examples/demo-starter
 
 # Or run ephemerally
-mush bundle load musher-dev/demo-starter
+musher bundle load musher-examples/demo-starter
 ```
 
 Then invoke from Claude Code, Codex, or any supported harness:
@@ -51,6 +59,14 @@ Use the code-reviewer agent to review the auth module
 ## SDK Examples
 
 The `examples/` directory shows how to consume the same bundle assets programmatically.
+
+Both SDKs need a `MUSHER_API_KEY` — sign up at [hub.musher.dev](https://hub.musher.dev) and generate one under **Settings > API Keys**. Examples that call the Anthropic API also need an `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/).
+
+> **Note — local source vs. published names:**
+> The `bundle/` directory contains the *source* files for this bundle. Asset names in the
+> source manifest (`musher.yaml`) may differ from names in the published bundle on
+> [hub.musher.dev](https://hub.musher.dev). The SDK examples reference the **published**
+> names (e.g. `summarizing-changes` rather than the source name `summarize-changes`).
 
 ### Python
 
@@ -70,6 +86,7 @@ cd examples/typescript
 npm install
 export MUSHER_API_KEY="mush_..."
 npm run pull-bundle             # Inspect bundle contents
+npm run install-skills          # Install skills into a Claude Code project
 npm run use-with-claude         # Use skills as system prompts with Anthropic SDK
 ```
 
@@ -77,8 +94,7 @@ npm run use-with-claude         # Use skills as system prompts with Anthropic SD
 
 | Repo | Description |
 |------|-------------|
-| [musher-dev/mush](https://github.com/musher-dev/mush) | Mush CLI — install and run bundles locally |
-| [musher-dev/musher-cli](https://github.com/musher-dev/musher-cli) | CLI for publishing bundles to the registry |
+| [musher-dev/musher-cli](https://github.com/musher-dev/musher-cli) | Musher CLI — install, run, author, and publish bundles |
 | [musher-dev/python-sdk](https://github.com/musher-dev/python-sdk) | Python SDK for the Musher platform |
 | [musher-dev/typescript-sdk](https://github.com/musher-dev/typescript-sdk) | TypeScript SDK for the Musher platform |
 | [musher-dev/specs](https://github.com/musher-dev/specs) | Bundle definition schemas and specifications |
